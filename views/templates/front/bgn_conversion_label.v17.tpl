@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
-        <div class="form-control">
+        <p class="text-muted small mb-0">
             {$currency_conversion_label|escape:'htmlall':'UTF-8'}
-        </div>
+        </p>
     </div>
 </div>

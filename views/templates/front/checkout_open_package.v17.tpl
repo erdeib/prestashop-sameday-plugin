@@ -24,8 +24,12 @@
  *}
 {include file='./_partials/checkout_open_package.tpl'}
 <div class="col-sm-12">
-    <div class="form-control">
-        <input name="samedaycourier_open_package" id="samedaycourier_open_package" type="checkbox" value="{$carrier_id}" /> {$label|escape:'htmlall':'UTF-8'}
+    <div class="form-check">
+        <input name="samedaycourier_open_package" id="samedaycourier_open_package"
+               type="checkbox" class="form-check-input" value="{$carrier_id}" />
+        <label class="form-check-label" for="samedaycourier_open_package">
+            {$label|escape:'htmlall':'UTF-8'}
+        </label>
     </div>
 </div>
 

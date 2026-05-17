@@ -39,7 +39,7 @@
                     data-city='{$city}'
                     data-county='{$county}'
                     data-store_locker_route='{$storeLockerRoute}'
-                    class="button-exclusive btn btn-default"
+                    class="button-exclusive btn btn-default btn-secondary"
             >
                 {l s='Show locations' mod='samedaycourier'}
             </button>

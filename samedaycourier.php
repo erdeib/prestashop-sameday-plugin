@@ -183,7 +183,7 @@ class SamedayCourier extends CarrierModule
         $this->name = 'samedaycourier';
         $this->tab = 'shipping_logistics';
 
-        $this->version = '1.8.5';
+        $this->version = '1.9.1';
         $this->author = 'Sameday Courier';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -194,7 +194,6 @@ class SamedayCourier extends CarrierModule
         $this->displayName = $this->l('Sameday Courier');
         $this->description = $this->l('Shipping module for Sameday Courier.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
-        $this->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         $this->logger = new FileLogger(0);
         $this->logger->setFilename(__DIR__ . '/log/' . md5(date('Ymd')) . '_sameday.log');
@@ -202,6 +201,14 @@ class SamedayCourier extends CarrierModule
         $this->ajaxRoute = $this->baseUrl()._MODULE_DIR_.'samedaycourier/ajax.php?token=' . Tools::substr(Tools::encrypt(Configuration::get('SAMEDAY_CRON_TOKEN')), 0, 10);
         $this->generalHelper = new SamedayGeneralHelper();
         $this->samedayApiHelper = new SamedayApiHelper();
+
+        // PS9 changed the admin layout lifecycle; AdminController::$currentIndex may be empty
+        // depending on context (e.g. front-office or cron). Fall back to the Link-based URL.
+        $legacyIndex = AdminController::$currentIndex;
+        $this->currentIndex = (!empty($legacyIndex)
+            ? $legacyIndex
+            : $this->context->link->getAdminLink('AdminModules', false))
+            . '&configure=' . $this->name;
     }
 
     private function getMajorVersion(): int
@@ -1783,10 +1790,12 @@ class SamedayCourier extends CarrierModule
                 $samedayCarrierIds[] = $carrier['id_carrier'];
             }
 
-            if (($this->getMajorVersion() === 1) && ($this->getMinorVersion() === 7)) {
-                $errorFile = 'views/js/weightError-17.js';
-            } else {
+            // PS1.7+ (including PS8, PS9+) uses the 1.7-style checkout layout.
+            // Only PS1.6 uses the legacy layout with different notification selectors.
+            if (($this->getMajorVersion() === 1) && ($this->getMinorVersion() === 6)) {
                 $errorFile = 'views/js/weightError.js';
+            } else {
+                $errorFile = 'views/js/weightError-17.js';
             }
 
             Media::addJsDef([

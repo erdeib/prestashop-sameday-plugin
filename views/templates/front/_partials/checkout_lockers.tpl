@@ -147,15 +147,12 @@
             let storeLockerRoute = document.getElementById('showLockerMap').getAttribute('data-store_locker_route');
             let idCart = document.getElementById('showLockerMap').getAttribute('data-id_cart');
 
-            $.ajax({
-                url: storeLockerRoute,
-                method: 'POST',
-                data: {
-                    action: 'store_locker',
-                    locker: locker,
-                    idCart: idCart,
-                },
-            });
+            const formData = new FormData();
+            formData.append('action', 'store_locker');
+            formData.append('locker', locker);
+            formData.append('idCart', idCart);
+
+            fetch(storeLockerRoute, { method: 'POST', body: formData });
         }
 
         const _setCookie = (key, value, days) => {
